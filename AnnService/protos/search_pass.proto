@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package pass_search_data;
+
+option cc_generic_services = true;
+
+message QueryHeadResult {
+    bytes m_target = 1;
+    bytes VIDs = 2;
+    bytes Dists = 3;
+    int32 nprobe = 4;
+    int32 K = 5;
+    int32 QID = 6;
+    double ClientToServerTime = 7;
+    int32 m_freq = 8;
+}
+
+message QuerySearchResult {
+    bytes VIDs = 1;
+    bytes Dists = 2;
+    int32 K = 3;
+    double ServerAcceptClientTime = 4;
+    double ServerProcessTime = 5;
+    double ServerToClientTime = 6;
+    double ServerPruningTime = 7;
+    // double responseDealRequestLatency = 4;
+    // double serverSearchLatency = 5;
+    // double responseSetReturnLatency = 6;
+    // double serverLatency = 7;
+}
+
+// Remote ANNS Service
+service RANNService {
+    rpc DiskSearch (QueryHeadResult) returns (QuerySearchResult);
+}

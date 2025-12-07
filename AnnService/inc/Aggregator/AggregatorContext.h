@@ -1,0 +1,65 @@
+// Copyright (c) Microsoft Corporation. All rights reserved.
+// Licensed under the MIT License.
+
+#ifndef _SPTAG_AGGREGATOR_AGGREGATORCONTEXT_H_
+#define _SPTAG_AGGREGATOR_AGGREGATORCONTEXT_H_
+
+#include <atomic>
+#include <memory>
+#include <vector>
+
+#include "AggregatorSettings.h"
+#include "inc/Core/VectorSet.h"
+#include "inc/Socket/Common.h"
+
+namespace SPTAG {
+namespace Aggregator {
+
+enum RemoteMachineStatus : uint8_t {
+    Disconnected = 0,
+
+    Connecting,
+
+    Connected
+};
+
+struct RemoteMachine {
+    RemoteMachine();
+
+    std::string m_address;
+
+    std::string m_port;
+
+    Socket::ConnectionID m_connectionID;
+
+    std::atomic<RemoteMachineStatus> m_status;
+};
+
+class AggregatorContext {
+   public:
+    AggregatorContext(const std::string& p_filePath);
+
+    ~AggregatorContext();
+
+    bool IsInitialized() const;
+
+    const std::vector<std::shared_ptr<RemoteMachine>>& GetRemoteServers() const;
+
+    const std::shared_ptr<AggregatorSettings>& GetSettings() const;
+
+    const std::shared_ptr<VectorSet>& GetCenters() const;
+
+   private:
+    std::vector<std::shared_ptr<RemoteMachine>> m_remoteServers;
+
+    std::shared_ptr<VectorSet> m_centers;
+
+    std::shared_ptr<AggregatorSettings> m_settings;
+
+    bool m_initialized;
+};
+
+}  // namespace Aggregator
+}  // namespace SPTAG
+
+#endif  // _SPTAG_AGGREGATOR_AGGREGATORCONTEXT_H_
